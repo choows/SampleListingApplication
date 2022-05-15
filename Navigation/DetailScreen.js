@@ -15,7 +15,7 @@ function DetailScreen({ route, navigation }) {
     const ref_last_name_input = useRef();
     const ref_email_input = useRef();
     const ref_phone_number_input = useRef();
-
+ 
     const Save = () => {
         if(!FirstName){
             Alert.prompt("First Name Required");

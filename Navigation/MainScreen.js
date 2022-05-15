@@ -27,7 +27,7 @@ function MainScreen({ navigation }) {
 
     }
     const OnPlus = () => {
-
+        navigation.navigate('New');
     }
     const ToDetail = (id) => {
         var result = Listing.filter(x => {

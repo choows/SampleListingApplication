@@ -7,6 +7,7 @@
  */
 import MainScreen from "./Navigation/MainScreen";
 import DetailScreen from "./Navigation/DetailScreen";
+import NewRecordScreen from "./Navigation/NewRecordScreen";
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -19,6 +20,9 @@ function App() {
         <Stack.Screen name="Detail" component={DetailScreen} options={{
           headerShown: false
         }} />
+        <Stack.Screen name="New" component={NewRecordScreen} options={{
+          headerShown : false
+        }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -2,23 +2,28 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'reac
 import React, { useEffect, useState, useRef } from 'react';
 import { Avatar, Header } from "@rneui/themed";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-function DetailScreen({ route, navigation }) {
-
-    var { id, firstName, lastName, email, phone } = route.params;
-
-    const [FirstName, setFirstName] = useState(firstName);
-    const [LastName, setLastName] = useState(lastName);
-    const [Email, setEmail] = useState(email);
-    const [Phone, setPhone] = useState(phone);
+function NewRecordScreen({ navigation }) {
+    const [FirstName, setFirstName] = useState('');
+    const [LastName, setLastName] = useState('');
+    const [Email, setEmail] = useState('');
+    const [Phone, setPhone] = useState('');
 
     const ref_first_name_input = useRef();
     const ref_last_name_input = useRef();
     const ref_email_input = useRef();
     const ref_phone_number_input = useRef();
-
+    const GenerateRandomID =(num)=>{
+        //Generate 24 alphanumeric 
+        const root = "abcdefghijklmnopqrstuvwxyz1234567890";
+        var result = "";
+        for(var i = 0 ; i < num ; i++){
+            result += root[Math.floor(Math.random() * root.length)];
+        }
+        return result;
+    }
     const Save = () => {
         var result_json = {
-            id: id,
+            id: GenerateRandomID(24),
             firstName: FirstName,
             lastName: LastName,
             email: Email,
@@ -28,22 +33,13 @@ function DetailScreen({ route, navigation }) {
         AsyncStorage.getItem(key).then((JV)=>{
             var jsonValue = JSON.parse(JV);
             if(jsonValue != null){
-                var idx = -1 ;
-                for(var i in jsonValue){
-                    var val = jsonValue[i];
-                    if(val.id == id){
-                        idx = i ;
-                    }
-                }
-                if(idx >= 0){
-                    jsonValue[idx] = result_json;
-                    AsyncStorage.setItem(key , JSON.stringify(jsonValue)).then(()=>{
-                        Alert.alert("Saved");
-                        navigation.goBack();
-                    }).catch((exp)=>{
-                        console.warn(exp);
-                    })
-                }
+                jsonValue.push(result_json);
+                AsyncStorage.setItem(key , JSON.stringify(jsonValue)).then(()=>{
+                    Alert.alert("Saved");
+                    navigation.goBack();
+                }).catch((exp)=>{
+                    console.warn(exp);
+                })
             }
         }).catch((exp)=>{
             console.warn(exp);
@@ -203,4 +199,4 @@ const c_styles = StyleSheet.create({
     }
 });
 
-export default DetailScreen;
+export default NewRecordScreen;

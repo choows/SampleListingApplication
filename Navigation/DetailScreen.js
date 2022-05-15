@@ -17,6 +17,14 @@ function DetailScreen({ route, navigation }) {
     const ref_phone_number_input = useRef();
 
     const Save = () => {
+        if(!FirstName){
+            Alert.prompt("First Name Required");
+            return;
+        }
+        if(!LastName){
+            Alert.prompt("Last Name Required");
+            return;
+        }
         var result_json = {
             id: id,
             firstName: FirstName,

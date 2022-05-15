@@ -2,30 +2,43 @@ import { View, Text, StyleSheet, ScrollView, RefreshControl, Button, TouchableOp
 import React, { useEffect, useState } from 'react';
 import { Icon, ListItem, Avatar } from "@rneui/themed";
 import * as data from '../data.json';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 function MainScreen({ navigation }) {
-
+    const key = "Sample_Storage_Key";
     const [refreshing, setRefreshing] = React.useState(false);
     const [Listing, setListing] = useState([]);
     const onRefresh = () => {
-        console.log("Refresh")
+        //var result_convert = Object.values(data);
+        //setListing(result_convert);
+        AsyncStorage.getItem(key).then((JV)=>{
+            var jsonValue = JSON.parse(JV);
+            if(jsonValue == null){
+                var result_convert = Object.values(data);
+                setListing(result_convert);
+                AsyncStorage.setItem(key , JSON.stringify(result_convert));
+            }else{
+                setListing(jsonValue);
+            }
+        }).catch((exp)=>{
+            console.warn(exp);
+        })
     }
-    const OnSearch=()=>{
+    const OnSearch = () => {
 
     }
-    const OnPlus=()=>{
+    const OnPlus = () => {
 
     }
-    const ToDetail=(id)=>{
-        var result = Listing.filter(x=> {
+    const ToDetail = (id) => {
+        var result = Listing.filter(x => {
             return x.id == id
         })[0];
-        if(result)
+        if (result)
             navigation.navigate('Detail', result);
-        
+
     }
     useEffect(() => {
-        var result_convert = Object.values(data);
-        setListing(result_convert);
+        onRefresh();
         navigation.setOptions({
             title: 'Contacts',
             headerTitleAlign: 'center',
@@ -35,7 +48,7 @@ function MainScreen({ navigation }) {
                         name='plus'
                         type='font-awesome'
                         color='#ff8c00'
-                        size={28}/>
+                        size={28} />
                 </TouchableOpacity>
             ),
             headerLeft: () => (
@@ -44,32 +57,32 @@ function MainScreen({ navigation }) {
                         name={'search'}
                         type='font-awesome'
                         color='#ff8c00'
-                        size={28}/>
+                        size={28} />
                 </TouchableOpacity>
             )
         })
     }, []);
     return (
-            <ScrollView
-                style={c_styles.scrollView}
-                scrollEnabled={true}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }>
-                {
-                    Listing.map((l, i) => (
-                        <ListItem key={i} bottomDivider onPress={()=>{ToDetail(l.id)}}>
-                            <Avatar source={require('../ff8c00.png') }  rounded/>
-                            <ListItem.Content>
-                                <ListItem.Title>{l.firstName + " " + l.lastName}</ListItem.Title>
-                            </ListItem.Content>
-                        </ListItem>
-                    ))
-                }
-            </ScrollView>
+        <ScrollView
+            style={c_styles.scrollView}
+            scrollEnabled={true}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />
+            }>
+            {
+                Listing.map((l, i) => (
+                    <ListItem key={i} bottomDivider onPress={() => { ToDetail(l.id) }}>
+                        <Avatar source={require('../ff8c00.png')} rounded />
+                        <ListItem.Content>
+                            <ListItem.Title>{l.firstName + " " + l.lastName}</ListItem.Title>
+                        </ListItem.Content>
+                    </ListItem>
+                ))
+            }
+        </ScrollView>
     );
 }
 

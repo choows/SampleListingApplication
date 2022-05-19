@@ -1,149 +1,131 @@
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
-import React, { useEffect, useState, useRef } from 'react';
+import React, {useState, useRef } from 'react';
 import { Avatar, Header } from "@rneui/themed";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 function DetailScreen({ route, navigation }) {
 
-    var { id, firstName, lastName, email, phone } = route.params;
+    const { id, firstName, lastName, email, phone } = route.params;
 
     const [FirstName, setFirstName] = useState(firstName);
     const [LastName, setLastName] = useState(lastName);
     const [Email, setEmail] = useState(email);
     const [Phone, setPhone] = useState(phone);
 
-    const ref_first_name_input = useRef();
-    const ref_last_name_input = useRef();
-    const ref_email_input = useRef();
-    const ref_phone_number_input = useRef();
- 
+    const FirstNameRef = useRef();
+    const LastNameRef = useRef();
+    const EmailRef = useRef();
+    const PhoneNumberRef = useRef();
+
     const Save = () => {
-        if(!FirstName){
+        if (!FirstName) {
             Alert.prompt("First Name Required");
             return;
         }
-        if(!LastName){
+        if (!LastName) {
             Alert.prompt("Last Name Required");
             return;
         }
-        var result_json = {
-            id: id,
-            firstName: FirstName,
-            lastName: LastName,
-            email: Email,
-            phone: Phone
-        }
-        var key = "Sample_Storage_Key";
-        AsyncStorage.getItem(key).then((JV)=>{
-            var jsonValue = JSON.parse(JV);
-            if(jsonValue != null){
-                var idx = -1 ;
-                for(var i in jsonValue){
-                    var val = jsonValue[i];
-                    if(val.id == id){
-                        idx = i ;
-                    }
+        navigation.navigate({
+            name: 'Home',
+            params: {
+                record: {
+                    id: id,
+                    firstName: FirstName,
+                    lastName: LastName,
+                    email: Email,
+                    phone: Phone
                 }
-                if(idx >= 0){
-                    jsonValue[idx] = result_json;
-                    AsyncStorage.setItem(key , JSON.stringify(jsonValue)).then(()=>{
-                        Alert.alert("Saved");
-                        navigation.goBack();
-                    }).catch((exp)=>{
-                        console.warn(exp);
-                    })
-                }
-            }
-        }).catch((exp)=>{
-            console.warn(exp);
-        })
+            },
+            merge: true,
+        });
     }
 
     return (
-        <View style={c_styles.container}>
+        <View style={Styles.container}>
             <Header
                 placement="left"
                 backgroundColor={'white'}
                 leftComponent={
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Text style={c_styles.HeaderText}>Cancel</Text>
-                    </TouchableOpacity>}
+                        <Text style={Styles.HeaderText}>Cancel</Text>
+                    </TouchableOpacity>
+                }
                 centerComponent={null}
                 rightComponent={
                     <TouchableOpacity onPress={() => Save()}>
-                        <Text style={c_styles.HeaderText}>Save</Text>
+                        <Text style={Styles.HeaderText}>Save</Text>
                     </TouchableOpacity>
                 }
             />
-            <View style={c_styles.Image_View}>
+            <View style={Styles.ImageView}>
                 <Avatar source={require('../ff8c00.png')} rounded size={120} />
             </View>
-            <View style={c_styles.Title_View_Header}>
-                <Text style={c_styles.Title_View_Text}>Main Information</Text>
+            <View style={Styles.TitleViewHeader}>
+                <Text style={Styles.TitleViewText}>Main Information</Text>
             </View>
-            <View style={c_styles.Detail_View}>
-                <View style={c_styles.RowDirection}>
-                    <View style={c_styles.Detail_View_Title}>
-                        <Text style={c_styles.View_Text}>First Name</Text>
+            <View style={Styles.DetailView}>
+                <View style={Styles.RowDirection}>
+                    <View style={Styles.DetailViewTitle}>
+                        <Text style={Styles.ViewText}>First Name</Text>
                     </View>
-                    <View style={c_styles.Detail_View_Descp}>
+                    <View style={Styles.DetailViewDescp}>
                         <TextInput
-                            style={c_styles.TextInputStyle}
+                            style={Styles.TextInputStyle}
                             value={FirstName}
                             returnKeyType="next"
-                            onChangeText={(text) => { setFirstName(text); }}
-                            ref={ref_first_name_input}
-                            onSubmitEditing={() => ref_last_name_input.current.focus()}
+                            onChangeText={setFirstName}
+                            ref={FirstNameRef}
+                            onSubmitEditing={() => LastNameRef.current.focus()}
                         />
                     </View>
                 </View>
-                <View style={c_styles.RowDirection}>
-                    <View style={c_styles.Detail_View_Title}>
-                        <Text style={c_styles.View_Text}>Last Name</Text>
+                <View style={Styles.RowDirection}>
+                    <View style={Styles.DetailViewTitle}>
+                        <Text style={Styles.ViewText}>Last Name</Text>
                     </View>
-                    <View style={c_styles.Detail_View_Descp}>
-                        <TextInput style={c_styles.TextInputStyle}
+                    <View style={Styles.DetailViewDescp}>
+                        <TextInput style={Styles.TextInputStyle}
                             value={LastName}
                             returnKeyType="next"
-                            ref={ref_last_name_input}
-                            onChangeText={(text) => { setLastName(text) }}
-                            onSubmitEditing={() => ref_email_input.current.focus()} />
+                            ref={LastNameRef}
+                            onChangeText={setLastName}
+                            onSubmitEditing={() => EmailRef.current.focus()} />
                     </View>
                 </View>
             </View>
-            <View style={c_styles.Title_View_Header}>
-                <Text style={c_styles.Title_View_Text}>Sub Information</Text>
+            <View style={Styles.TitleViewHeader}>
+                <Text style={Styles.TitleViewText}>Sub Information</Text>
             </View>
-            <View style={c_styles.Detail_View}>
-                <View style={c_styles.RowDirection}>
-                    <View style={c_styles.Detail_View_Title}>
-                        <Text style={c_styles.View_Text}>Email</Text>
+            <View style={Styles.DetailView}>
+                <View style={Styles.RowDirection}>
+                    <View style={Styles.DetailViewTitle}>
+                        <Text style={Styles.ViewText}>Email</Text>
                     </View>
-                    <View style={c_styles.Detail_View_Descp}>
-                        <TextInput style={c_styles.TextInputStyle}
+                    <View style={Styles.DetailViewDescp}>
+                        <TextInput style={Styles.TextInputStyle}
                             value={Email}
                             returnKeyType="next"
-                            ref={ref_email_input}
-                            onChangeText={(text) => { setEmail(text) }}
-                            onSubmitEditing={() => ref_phone_number_input.current.focus()} />
+                            ref={EmailRef}
+                            onChangeText={setEmail}
+                            onSubmitEditing={() => PhoneNumberRef.current.focus()} />
                     </View>
                 </View>
-                <View style={c_styles.RowDirection}>
-                    <View style={c_styles.Detail_View_Title}>
-                        <Text style={c_styles.View_Text}>Phone</Text>
+                <View style={Styles.RowDirection}>
+                    <View style={Styles.DetailViewTitle}>
+                        <Text style={Styles.ViewText}>Phone</Text>
                     </View>
-                    <View style={c_styles.Detail_View_Descp}>
-                        <TextInput style={c_styles.TextInputStyle}
+                    <View style={Styles.DetailViewDescp}>
+                        <TextInput style={Styles.TextInputStyle}
                             value={Phone}
                             returnKeyType="next"
-                            onChangeText={(text) => { setPhone(text) }}
-                            ref={ref_phone_number_input} />
+                            onChangeText={setPhone}
+                            ref={PhoneNumberRef} />
                     </View>
                 </View>
             </View>
         </View>
     );
 }
-const c_styles = StyleSheet.create({
+const Styles = StyleSheet.create({
     container: {
         height: '100%',
         width: '100%'
@@ -165,7 +147,7 @@ const c_styles = StyleSheet.create({
         color: '#ff8c00',
         fontSize: 20
     },
-    Title_View_Header: {
+    TitleViewHeader: {
         backgroundColor: '#e0dede',
         height: '5%',
         padding: 10,
@@ -173,7 +155,7 @@ const c_styles = StyleSheet.create({
         fontWeight: 'bolder',
         color: 'black'
     },
-    Detail_View: {
+    DetailView: {
         minHeight: '10%',
         width: '100%',
         padding: 10
@@ -182,21 +164,21 @@ const c_styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row'
     },
-    Detail_View_Title: {
+    DetailViewTitle: {
         width: '25%',
         height: '100%'
     },
-    Detail_View_Descp: {
+    DetailViewDescp: {
         width: '75%',
         height: '100%'
     },
-    Title_View_Text: {
+    TitleViewText: {
         fontWeight: 'bold',
         color: 'black',
         fontSize: 15,
         flexDirection: 'row'
     },
-    View_Text: {
+    ViewText: {
         fontWeight: 'bold',
         color: 'black',
         fontSize: 15,
@@ -204,7 +186,7 @@ const c_styles = StyleSheet.create({
         textAlignVertical: 'center',
         margin: 5,
     },
-    Image_View: {
+    ImageView: {
         alignContent: 'center',
         alignItems: 'center',
         paddingVertical: 25

@@ -13,10 +13,10 @@ function NewRecordScreen({ navigation }) {
     const EmailRef = useRef();
     const PhoneNumberRef = useRef();
 
-    const GenerateRandomID =(num)=>{
+    const GenerateRandomID =(NumOfCharacter)=>{
         const root = "abcdefghijklmnopqrstuvwxyz1234567890";
         let result = "";
-        for(var i = 0 ; i < num ; i++){
+        for(var idx = 0 ; idx < NumOfCharacter ; idx++){
             result += root[Math.floor(Math.random() * root.length)];
         }
         return result;

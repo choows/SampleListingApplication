@@ -53,15 +53,15 @@ function MainScreen({ route, navigation }) {
         }
         
     }
-    const OnSearchClicked = (t) => {
-        setShowSearch(t)
+    const OnSearchClicked = (showSearch) => {
+        setShowSearch(showSearch)
     }
     const OnPlusClicked = () => {
         navigation.navigate('New');
     }
-    const ToDetail = (id) => {
+    const ToDetail = (recordID) => {
         const result = Listing.filter(x => {
-            return x.id == id
+            return x.id == recordID
         })[0];
         if (result)
             navigation.navigate('Detail', result);
